@@ -1,0 +1,18 @@
+import OTSelector.Transport.Coupling.StageSpliceCost
+import OTSelector.Transport.Coupling.ResidualCoordinateMarginals
+import OTSelector.Transport.Coupling.PopulationClassFlow
+import OTSelector.Transport.Coupling.OptimalityFromCalibrationSlack
+import OTSelector.Transport.Coupling.OptimalFaceDensities
+import OTSelector.Transport.Coupling.MixtureDeviationEnergy
+import OTSelector.Transport.Coupling.MeasurableWindowTransfer
+import OTSelector.Transport.Coupling.MeasurableReferenceFlow
+import OTSelector.Transport.Coupling.LabelClockCoordinates
+import OTSelector.Transport.Coupling.FiniteStageLegality
+import OTSelector.Transport.Coupling.FiniteLabelCoreRecovery
+import OTSelector.Transport.Coupling.FiniteAtomicSourceDisintegration
+import OTSelector.Transport.Coupling.EmpiricalFace
+import OTSelector.Transport.Coupling.CommonMarginalSubplan
+import OTSelector.Transport.Coupling.ClassFlowReindex
+import OTSelector.Transport.Coupling.LengthIsometry
+
+/-! Mathematical import surface; exact hypotheses and external sources are documented in the imported modules. -/

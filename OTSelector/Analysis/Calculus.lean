@@ -1,0 +1,32 @@
+import OTSelector.Analysis.Calculus.WeakDerivative
+import OTSelector.Analysis.Calculus.Variational
+import OTSelector.Analysis.Calculus.UniformStationaryQuadraticModel
+import OTSelector.Analysis.Calculus.UniformSeedNormalization
+import OTSelector.Analysis.Calculus.UniformSecondJetPolynomial
+import OTSelector.Analysis.Calculus.UniformSecondJetLevelSection
+import OTSelector.Analysis.Calculus.UniformQuadraticLinearCoordinates
+import OTSelector.Analysis.Calculus.UniformParameterizedSeedNormalization
+import OTSelector.Analysis.Calculus.SmoothMatrixRemainderBounds
+import OTSelector.Analysis.Calculus.SmoothEikonalJet
+import OTSelector.Analysis.Calculus.SmoothCutoff
+import OTSelector.Analysis.Calculus.SecondJetTransfer
+import OTSelector.Analysis.Calculus.OrthonormalDivergence
+import OTSelector.Analysis.Calculus.OrthonormalCubeEnergy
+import OTSelector.Analysis.Calculus.LimitFromSecantSlopes
+import OTSelector.Analysis.Calculus.IntrinsicCostCoefficientNormalSeed
+import OTSelector.Analysis.Calculus.GraphVelocityPhase
+import OTSelector.Analysis.Calculus.GraphClockClosedInverse
+import OTSelector.Analysis.Calculus.FlowJetMatching
+import OTSelector.Analysis.Calculus.EuclideanGradientPullback
+import OTSelector.Analysis.Calculus.DistanceLocalizationTaylor
+import OTSelector.Analysis.Calculus.DensityOneLowerDerivative
+import OTSelector.Analysis.Calculus.ConeCurveNonnegativeIntegral
+import OTSelector.Analysis.Calculus.ConeCurveKineticIntegral
+import OTSelector.Analysis.Calculus.CompactKernelCurrent
+import OTSelector.Analysis.Calculus.CompactUniformQuadraticCore
+import OTSelector.Analysis.Calculus.ImmersionCenteredLowerBound
+import OTSelector.Analysis.Calculus.MixedFlowJetMatching
+import OTSelector.Analysis.Calculus.ShortTimeLipschitz
+import OTSelector.Analysis.Calculus.Whitney
+
+/-! Mathematical import surface. Exact hypotheses and book/paper sections are documented in the imported modules. -/

@@ -1,0 +1,124 @@
+import OTSelector.Reconstruction.FinslerRelativeLawOriginalFineCoreAssembly
+import OTSelector.Reconstruction.FinslerRelativeLawOriginalFineFullRetention
+import OTSelector.Reconstruction.FinslerRelativeLawOriginalFineBadCellProperties
+import OTSelector.Reconstruction.FinslerRelativeLawOriginalTruncatedCompactSplit
+
+/-! Original compact good/bad cores and the true residual form a full original assignment. -/
+open Set Function MeasureTheory ProbabilityTheory
+open scoped ENNReal BigOperators Classical
+noncomputable section
+namespace OTSelector.Reconstruction.PopulationTypedCostData
+set_option backward.isDefEq.respectTransparency false
+set_option maxHeartbeats 1800000
+set_option linter.style.haveILetI false
+
+/-- On the same original fine marked experiment, arbitrary good and bad cores
+from the two genuine hierarchy budgets combine with the true residual. The
+compact split, original physical cell labels, and retained-family insertion are
+all discharged internally; completion sees only their actual source defects. -/
+theorem exists_original_truncated_compact_core_full_assignment
+    {X Z C T : Type*} [MetricSpace X] [MeasurableSpace X] [MeasurableSpace Z]
+    [Fintype C] [Fintype T] [DecidableEq T]
+    [MeasurableSpace (Option (Bool × T))]
+    [MeasurableSingletonClass (Option (Bool × T))]
+    [MeasurableSpace (Option (CellRefinedType C T))]
+    [MeasurableSingletonClass (Option (CellRefinedType C T))]
+    (χ ξ : Measure (X × X)) [IsFiniteMeasure χ] [IsFiniteMeasure ξ]
+    {μ ν : Measure X} [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    (hπ : Vlasov.IsCoupling (χ + ξ) μ ν)
+    {q : ℕ} {cost : X → X → ℝ} (D : PopulationTypedCostData (χ + ξ) μ ν T q cost)
+    (a : X → Z) (ha : Measurable a) (u : X → ℝ) {A : Set X}
+    (horder : ∀ x ∈ A, ∀ y ∈ A, (a x = a y ∧ u x ≤ u y) ↔ u y - u x = dist x y)
+    (hμA : ∀ᵐ x ∂μ, x ∈ A) (hνA : ∀ᵐ y ∂ν, y ∈ A)
+    (hcal : ∀ᵐ p ∂χ + ξ, u p.2 - u p.1 = dist p.1 p.2)
+    (cell : C → Set Z) (hcell : ∀ c, MeasurableSet (cell c))
+    (hdisj : Pairwise (Disjoint on cell))
+    (compact : T → C → Set (DyadicUnitCube q))
+    (hcompact : ∀ t c, MeasurableSet (compact t c))
+    {n : ℕ} (hq : 4 < q) (hn : 0 < n)
+    (probe : X → X → ℝ) (hprobe : Measurable (Function.uncurry probe))
+    {B : ℝ} (hB : 0 ≤ B) (hb : ∀ᵐ p ∂μ.prod ν, |probe p.1 p.2| ≤ B) :
+    let η := restrictOriginalRetainedResidual χ ξ a (⋃ c, cell c)
+    let hη := restrictOriginalRetainedResidual_le χ ξ a ha (MeasurableSet.iUnion hcell)
+    let coord := fun t (p : X × X) ↦ D.sourceCoordinate t p.1
+    let good := D.types.rnCellCompactGoodComponent η hη (fun p ↦ a p.1) coord cell compact
+    let bad := D.types.rnCellCompactBadComponent η hη (fun p ↦ a p.1) coord cell compact
+    let hsplit := D.types.rn_truncated_compact_split χ ξ a ha cell hcell coord
+      (fun t ↦ (D.measurable_sourceCoordinate t).comp measurable_fst) hdisj compact hcompact
+    let R := D.types.rnCellRefinedTypes η hη good bad hsplit
+    let P := (Measure.pi (fun _ : Fin n ↦ R.sourceMarkedLaw μ)).prod
+      (Measure.pi (fun _ : Fin n ↦ R.targetMarkedLaw ν))
+    let pressure := fun K tilt sample ↦ D.originalResidualPressureBudget η hη n K probe tilt
+      (cellRefinedSubplanObservation sample)
+    let count := fun sample ↦ D.originalResidualCountBudget η hη n
+      (cellRefinedSubplanObservation sample)
+    let actualCost := fun tilt sample i j ↦ (n : ℝ) ^ (2 / (q : ℝ)) *
+      cost (sample.1 i).1 (sample.2 j).1 + tilt * probe (sample.1 i).1 (sample.2 j).1
+    ∃ K : ℕ,
+      (∀ tilt : ℝ, Integrable (pressure K tilt) P ∧
+        (1 / (n : ℝ)) * (∫ sample, pressure K tilt sample ∂P) ≤
+          D.quadraticConstant * dyadicMatchingConstant q *
+            (Fintype.card T : ℝ) ^ (2 / (q : ℝ)) *
+              (η univ).toReal ^ (1 - 2 / (q : ℝ)) +
+          D.globalBound * Real.sqrt (2 * Fintype.card T) *
+            (n : ℝ) ^ (2 / (q : ℝ) - 1 / 2) * Real.sqrt (η univ).toReal +
+          2 * |tilt| * B * (η univ).toReal) ∧
+      (Integrable count P ∧ (∫ sample, count sample ∂P) ≤
+        Real.sqrt (2 * (n : ℝ) * Fintype.card (Option (Bool × T)))) ∧
+      ∀ᵐ sample ∂P, ∀ tilt : ℝ, ∀ coreGood coreBad : OTSelector.PartialMatching n n,
+      (∀ e ∈ coreGood.edges, ∃ t,
+        (sample.1 e.1).2.bind cellRefinedGoodType = some t ∧
+        (sample.2 e.2).2.bind cellRefinedGoodType = some t ∧
+        ∃ c, cellRefinedGoodCell a cell (sample.1 e.1) = some c ∧
+          cellRefinedGoodCell a cell (sample.2 e.2) = some c) →
+      (∀ e ∈ coreBad.edges, ∃ p : C × T,
+        (sample.1 e.1).2.bind cellRefinedBadType = some p ∧
+          (sample.2 e.2).2.bind cellRefinedBadType = some p) →
+      ∃ full : Assignment n,
+        assignmentCost (actualCost tilt sample) full ≤
+          coreGood.cost (actualCost tilt sample) + coreBad.cost (actualCost tilt sample) +
+          pressure K tilt sample + ((n : ℝ) ^ (2 / (q : ℝ)) * D.globalBound + |tilt| * B) *
+            (((∑ t ∈ presentTypeTags T,
+              partitionCount (fun i ↦ (sample.1 i).2.bind cellRefinedGoodType) t) - coreGood.card) +
+            ((∑ t ∈ presentTypeTags (C × T),
+              partitionCount (fun i ↦ (sample.1 i).2.bind cellRefinedBadType) t) - coreBad.card) +
+              count sample) := by
+  let η := restrictOriginalRetainedResidual χ ξ a (⋃ c, cell c)
+  let hη := restrictOriginalRetainedResidual_le χ ξ a ha (MeasurableSet.iUnion hcell)
+  let coord := fun t (p : X × X) ↦ D.sourceCoordinate t p.1
+  let good := D.types.rnCellCompactGoodComponent η hη (fun p ↦ a p.1) coord cell compact
+  let bad := D.types.rnCellCompactBadComponent η hη (fun p ↦ a p.1) coord cell compact
+  have hcoord t : Measurable (coord t) := (D.measurable_sourceCoordinate t).comp measurable_fst
+  have hsplit := D.types.rn_truncated_compact_split χ ξ a ha cell hcell coord hcoord
+    hdisj compact hcompact
+  obtain ⟨K, henergy, hcount, hfull⟩ := D.exists_rnCellRefinedTypes_original_full_assignment
+    (L := C) η hη good bad hsplit hq hn hπ probe hprobe hB hb
+  have hproper := D.rnCellRefinedTypes_iid_some η hη good bad hsplit hπ
+    (I := Fin n) (J := Fin n)
+  have hpartition := D.original_deterministic_fine_cell_tags_ae χ ξ hπ a ha u
+    horder hμA hνA hcal cell hcell good bad hsplit n
+  have hlabel : ∀ᵐ p ∂χ + ξ, a p.1 = a p.2 :=
+    (original_calibrated_coupling_labels μ ν (χ + ξ) (χ + ξ) hπ le_rfl
+      a u horder hμA hνA hcal).mono fun _ h ↦ h.1
+  have hbad := D.types.rnCellRefinedTypes_bad_cell_properties (μ := μ) (ν := ν)
+    η hη good bad hsplit
+    a a ha ha cell hcell hdisj
+    (original_rn_compact_bad_joint_cells D.types η hη a ha hlabel coord hcoord
+      cell hcell compact hcompact) n
+  dsimp only
+  refine ⟨K, henergy, hcount, ?_⟩
+  filter_upwards [hfull, hproper, hpartition, hbad] with sample hfull hp hpart hbad
+  intro tilt coreGood coreBad hgood hbadCore
+  obtain ⟨retained, hretained, hcost, hdefect⟩ :=
+    exists_original_good_bad_retained_cell_family a a cell sample.1 sample.2 coreGood coreBad
+      hgood hbadCore (fun i c t hi ↦ (hbad.1 i c t hi).2)
+      (fun j c t hj ↦ (hbad.2 j c t hj).2) hp.1 hpart.1
+  obtain ⟨full, hbound⟩ := hfull tilt
+    (fun i ↦ fineOriginalRetainedCellTag a cell (sample.1 i))
+    (fun j ↦ fineOriginalRetainedCellTag a cell (sample.2 j))
+    hpart.1 hpart.2 retained hretained
+  refine ⟨full, ?_⟩
+  rw [hcost, hdefect] at hbound
+  exact hbound
+
+end OTSelector.Reconstruction.PopulationTypedCostData

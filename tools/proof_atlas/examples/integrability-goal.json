@@ -1,0 +1,6 @@
+{
+  "imports": ["Mathlib"],
+  "context": "open MeasureTheory\nvariable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsFiniteMeasure μ] (f : Ω → ℝ) (C : ℝ) (hf : AEStronglyMeasurable f μ)",
+  "goal": "Integrable f μ",
+  "object_mapping": {"measure": "μ", "integrand": "f", "uniform_bound": "C"}
+}

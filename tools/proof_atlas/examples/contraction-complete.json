@@ -1,0 +1,6 @@
+{
+  "imports": ["Mathlib"],
+  "context": "variable (D κ : ℝ) (hD : 0 ≤ D) (hκ : κ < 1) (hc : D ≤ κ * D)",
+  "goal": "D = 0",
+  "object_mapping": {"defect": "D", "contraction_factor": "κ"}
+}

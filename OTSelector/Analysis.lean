@@ -1,0 +1,26 @@
+import OTSelector.Analysis.PolynomialFourthRootExponentialSummability
+import OTSelector.Analysis.PolynomialExponentialSquareRootDecay
+import OTSelector.Analysis.ODE
+import OTSelector.Analysis.NormedSpace
+import OTSelector.Analysis.ContractiveInverseCovariance
+import OTSelector.Analysis.ContractiveFieldAmplitude
+import OTSelector.Analysis.ContractiveCurveCode
+import OTSelector.Analysis.CommonScaleCanonicalCurve
+import OTSelector.Analysis.Asymptotics
+import OTSelector.Analysis.Convex
+import OTSelector.Analysis.ENNRealSquareRootReadout
+import OTSelector.Analysis.FiniteEnergyPowers
+import OTSelector.Analysis.HamiltonJacobiFluxYoung
+import OTSelector.Analysis.InnerProductSpace
+import OTSelector.Analysis.Normed
+import OTSelector.Analysis.RealPowerEnergyBudget
+import OTSelector.Analysis.RealPowerInterpolation
+import OTSelector.Analysis.RelativeErrorConvergence
+import OTSelector.Analysis.RelativeErrorUpperLimit
+import OTSelector.Analysis.Sobolev
+import OTSelector.Analysis.Calculus
+import OTSelector.Analysis.ContinuousDerivativeRepresentative
+import OTSelector.Analysis.NormalizedResidual
+import OTSelector.Analysis.PolynomialExponentialThreshold
+
+/-! Reusable analysis and convex comparison methods; see research/MATHEMATICAL_METHODS.md. -/

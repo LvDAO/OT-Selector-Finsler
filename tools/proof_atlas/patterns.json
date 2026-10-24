@@ -1,0 +1,312 @@
+{
+  "schema_version": 1,
+  "patterns": [
+    {
+      "id": "finite-measure-bounded-integrability",
+      "title": "Bounded measurable real functions are integrable under a finite measure",
+      "tags": [
+        "measure",
+        "integrability",
+        "bounded",
+        "finite measure"
+      ],
+      "conditions": [
+        {
+          "name": "finite_measure",
+          "lean_type": "IsFiniteMeasure μ",
+          "role": "instance"
+        },
+        {
+          "name": "measurability",
+          "lean_type": "AEStronglyMeasurable f μ",
+          "role": "hf"
+        },
+        {
+          "name": "bound",
+          "lean_type": "∀ᵐ x ∂μ, ‖f x‖ ≤ C",
+          "role": "hbound"
+        }
+      ],
+      "objects": [
+        {
+          "role": "sample_space",
+          "lean_type": "Type*",
+          "example": "Ω"
+        },
+        {
+          "role": "measure",
+          "lean_type": "Measure Ω",
+          "example": "μ"
+        },
+        {
+          "role": "integrand",
+          "lean_type": "Ω → ℝ",
+          "example": "f"
+        },
+        {
+          "role": "uniform_bound",
+          "lean_type": "ℝ",
+          "example": "C"
+        }
+      ],
+      "proof_detail": {
+        "lemma_references": [
+          "MeasureTheory.Integrable.of_bound"
+        ],
+        "source_paths": [
+          "OTSelector/Reconstruction/FinslerOriginalTileStructureResidualsProved.lean",
+          ".lake/packages/mathlib/Mathlib/MeasureTheory/Integral/IntegrableOn.lean"
+        ],
+        "explanation": "Instantiate the existing finite-measure bounded-integrability lemma after identifying the measure, function and actual almost-everywhere bound.",
+        "remaining_obligations": [
+          "Provide the finite-measure instance, almost-everywhere strong measurability and norm bound for the mapped objects."
+        ],
+        "example": {
+          "imports": [
+            "Mathlib"
+          ],
+          "context": "open MeasureTheory\nvariable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsFiniteMeasure μ]\n  (f : Ω → ℝ) (C : ℝ) (hf : AEStronglyMeasurable f μ)\n  (hbound : ∀ᵐ x ∂μ, ‖f x‖ ≤ C)",
+          "goal": "Integrable f μ",
+          "candidate_kind": "tactic",
+          "candidate": "exact Integrable.of_bound hf C hbound",
+          "object_mapping": {
+            "measure": "μ",
+            "integrand": "f",
+            "uniform_bound": "C"
+          },
+          "expected_status": "complete"
+        }
+      },
+      "limitations": [
+        "A bounded integrand alone does not give integrability under an infinite measure."
+      ],
+      "application_template": "refine (show MeasureTheory.IsFiniteMeasure {{measure}} →\n    MeasureTheory.AEStronglyMeasurable {{integrand}} {{measure}} →\n    (∀ᵐ x ∂{{measure}}, ‖{{integrand}} x‖ ≤ {{uniform_bound}}) →\n    MeasureTheory.Integrable {{integrand}} {{measure}} from by\n  intro hfinite hmeas hbound\n  letI := hfinite\n  exact MeasureTheory.Integrable.of_bound hmeas {{uniform_bound}} hbound) ?_ ?_ ?_\nall_goals first | assumption | skip"
+    },
+    {
+      "id": "eventual-upper-bound-passes-to-limit",
+      "title": "An eventual real upper bound passes to an existing limit",
+      "tags": [
+        "filter",
+        "eventually",
+        "limit",
+        "upper bound",
+        "pressure"
+      ],
+      "conditions": [
+        {
+          "name": "convergence",
+          "lean_type": "Tendsto a atTop (𝓝 L)",
+          "role": "hlimit"
+        },
+        {
+          "name": "eventual_bound",
+          "lean_type": "∀ᶠ n in atTop, a n ≤ B",
+          "role": "hbound"
+        }
+      ],
+      "objects": [
+        {
+          "role": "finite_scale_values",
+          "lean_type": "ℕ → ℝ",
+          "example": "a"
+        },
+        {
+          "role": "limit_value",
+          "lean_type": "ℝ",
+          "example": "L"
+        },
+        {
+          "role": "upper_bound",
+          "lean_type": "ℝ",
+          "example": "B"
+        }
+      ],
+      "proof_detail": {
+        "lemma_references": [
+          "le_of_tendsto"
+        ],
+        "source_paths": [
+          "OTSelector/Reconstruction/OriginalLegalPressureBlockEnvelope.lean"
+        ],
+        "explanation": "Supply the proved limit and the eventual inequality to le_of_tendsto. The inequality does not establish existence of the limit.",
+        "remaining_obligations": [
+          "Identify the existing convergence theorem and establish the eventual inequality with the same filter and scalar values."
+        ],
+        "example": {
+          "imports": [
+            "Mathlib"
+          ],
+          "context": "open Filter\nopen scoped Topology\nvariable (a : ℕ → ℝ) (L B : ℝ)\n  (hlimit : Tendsto a atTop (𝓝 L))\n  (hbound : ∀ᶠ n in atTop, a n ≤ B)",
+          "goal": "L ≤ B",
+          "candidate_kind": "tactic",
+          "candidate": "exact le_of_tendsto hlimit hbound",
+          "object_mapping": {
+            "finite_scale_values": "a",
+            "limit_value": "L",
+            "upper_bound": "B"
+          },
+          "expected_status": "complete"
+        }
+      },
+      "limitations": [
+        "An eventual inequality cannot substitute for the convergence hypothesis."
+      ],
+      "application_template": "refine (show Filter.Tendsto {{finite_scale_values}} Filter.atTop (𝓝 {{limit_value}}) →\n    (∀ᶠ n in Filter.atTop, {{finite_scale_values}} n ≤ {{upper_bound}}) →\n    {{limit_value}} ≤ {{upper_bound}} from by\n  intro hlimit hbound\n  exact le_of_tendsto hlimit hbound) ?_ ?_\nall_goals first | assumption | skip"
+    },
+    {
+      "id": "nonnegative-real-strict-contraction-zero",
+      "title": "A nonnegative real defect dominated by a strict contraction vanishes",
+      "tags": [
+        "real",
+        "nonnegative",
+        "strict contraction",
+        "zero defect",
+        "uniqueness"
+      ],
+      "conditions": [
+        {
+          "name": "finite_real_defect",
+          "lean_type": "D : ℝ",
+          "role": "D"
+        },
+        {
+          "name": "nonnegative_defect",
+          "lean_type": "0 ≤ D",
+          "role": "hD"
+        },
+        {
+          "name": "strict_factor",
+          "lean_type": "κ < 1",
+          "role": "hκ"
+        },
+        {
+          "name": "contraction",
+          "lean_type": "D ≤ κ * D",
+          "role": "hcontract"
+        }
+      ],
+      "objects": [
+        {
+          "role": "defect",
+          "lean_type": "ℝ",
+          "example": "D"
+        },
+        {
+          "role": "contraction_factor",
+          "lean_type": "ℝ",
+          "example": "κ"
+        }
+      ],
+      "proof_detail": {
+        "lemma_references": [
+          "lt_of_le_of_ne",
+          "mul_lt_mul_of_pos_right"
+        ],
+        "source_paths": [
+          "OTSelector/Feedback/Intersections.lean"
+        ],
+        "explanation": "If D were positive, multiplying κ < 1 by D would give κD < D, contradicting the supplied contraction. This is finite real arithmetic.",
+        "remaining_obligations": [
+          "Map the actual defect to a finite real scalar and prove its nonnegativity and strict contraction."
+        ],
+        "example": {
+          "imports": [
+            "Mathlib"
+          ],
+          "context": "variable (D κ : ℝ) (hD : 0 ≤ D) (hκ : κ < 1) (hcontract : D ≤ κ * D)",
+          "goal": "D = 0",
+          "candidate_kind": "tactic",
+          "candidate": "by_contra hne\nhave hpos : 0 < D := lt_of_le_of_ne hD (Ne.symm hne)\nhave hstrict := mul_lt_mul_of_pos_right hκ hpos\nnlinarith",
+          "object_mapping": {
+            "defect": "D",
+            "contraction_factor": "κ"
+          },
+          "expected_status": "complete"
+        },
+        "provenance": "Curated finite-real arithmetic pattern. The project reference uses finite edist when invoking contraction uniqueness; the example below is checked separately by Lean."
+      },
+      "limitations": [
+        "Do not transfer this pattern to ℝ≥0∞ without separately proving that the defect is finite."
+      ],
+      "counterexample_pattern": "ennreal-infinite-defect-is-not-zero",
+      "application_template": "refine (show ∀ (D κ : ℝ), 0 ≤ D → κ < 1 → D ≤ κ * D → D = 0 from by\n  intro D κ hD hκ hcontract\n  by_contra hne\n  have hpos : 0 < D := lt_of_le_of_ne hD (Ne.symm hne)\n  have hstrict := mul_lt_mul_of_pos_right hκ hpos\n  nlinarith) {{defect}} {{contraction_factor}} ?_ ?_ ?_\nall_goals first | assumption | skip"
+    },
+    {
+      "id": "ennreal-infinite-defect-is-not-zero",
+      "title": "Infinity prevents transferring finite-real contraction reasoning to ENNReal",
+      "kind": "counterexample",
+      "tags": [
+        "ENNReal",
+        "infinity",
+        "contraction",
+        "negative example",
+        "type mismatch"
+      ],
+      "conditions": [
+        {
+          "name": "extended_nonnegative_defect",
+          "lean_type": "D : ℝ≥0∞",
+          "role": "D"
+        },
+        {
+          "name": "infinite_defect",
+          "lean_type": "D = ⊤",
+          "role": "infinity"
+        }
+      ],
+      "objects": [
+        {
+          "role": "defect",
+          "lean_type": "ℝ≥0∞",
+          "example": "⊤"
+        },
+        {
+          "role": "contraction_factor",
+          "lean_type": "ℝ≥0∞",
+          "example": "1 / 2"
+        }
+      ],
+      "proof_detail": {
+        "lemma_references": [
+          "ENNReal.mul_top",
+          "ENNReal.top_ne_zero"
+        ],
+        "source_paths": [
+          ".lake/packages/mathlib/Mathlib/Data/ENNReal/Operations.lean"
+        ],
+        "explanation": "The infinite defect satisfies D ≤ (1/2)D and remains nonzero. The real-valued contraction pattern therefore requires a genuine finiteness argument before conversion to real scalars.",
+        "remaining_obligations": [
+          "For a valid transfer, prove D ≠ ⊤ before using finite real arithmetic; otherwise retain the counterexample."
+        ],
+        "example": {
+          "imports": [
+            "Mathlib"
+          ],
+          "context": "open scoped ENNReal",
+          "goal": "(⊤ : ℝ≥0∞) ≤ (1 / 2 : ℝ≥0∞) * ⊤ ∧ (⊤ : ℝ≥0∞) ≠ 0",
+          "candidate_kind": "tactic",
+          "candidate": "constructor <;> norm_num",
+          "object_mapping": {
+            "defect": "(⊤ : ℝ≥0∞)",
+            "contraction_factor": "(1 / 2 : ℝ≥0∞)"
+          },
+          "expected_status": "complete"
+        },
+        "invalid_transfer": {
+          "imports": [
+            "Mathlib"
+          ],
+          "context": "open scoped ENNReal",
+          "goal": "(⊤ : ℝ≥0∞) = 0",
+          "candidate_kind": "tactic",
+          "candidate": "refine (show ∀ (D κ : ℝ), 0 ≤ D → κ < 1 → D ≤ κ * D → D = 0 from by\n  intro D κ hD hκ hcontract\n  by_contra hne\n  have hpos : 0 < D := lt_of_le_of_ne hD (Ne.symm hne)\n  have hstrict := mul_lt_mul_of_pos_right hκ hpos\n  nlinarith) (⊤ : ℝ≥0∞) (1 / 2 : ℝ≥0∞) ?_ ?_ ?_\nall_goals first | assumption | skip",
+          "expected_status": "rejected"
+        }
+      },
+      "limitations": [
+        "This certified counterexample rejects a transfer rule; it does not refute a finite-real theorem."
+      ],
+      "application_template": "constructor <;> norm_num"
+    }
+  ]
+}
