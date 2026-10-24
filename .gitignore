@@ -126,3 +126,10 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Local development records and tooling
+/research/
+/test/
+/tests/
+/tools/
+/AGENTS.md

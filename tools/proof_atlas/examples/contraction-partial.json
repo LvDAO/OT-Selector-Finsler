@@ -1,6 +1,0 @@
-{
-  "imports": ["Mathlib"],
-  "context": "variable (D κ : ℝ) (hD : 0 ≤ D)",
-  "goal": "D = 0",
-  "object_mapping": {"defect": "D", "contraction_factor": "κ"}
-}
