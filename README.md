@@ -6,23 +6,23 @@ Related: [OT-Selector](https://github.com/LvDAO/OT-Selector), for the uniform pl
 
 ## Main theorem
 
-Let $(M,F)$ be a connected, complete, smooth, reversible, strongly convex
-Finsler manifold of dimension $d\ge6$, with smooth positive volume $m$.
-Let $\mu=\rho_A m$ and $\nu=\rho_B m$ be probability measures with Lipschitz
-densities and disjoint compact supports $A,B$.
-For independent iid samples, let $\mu_n,\nu_n$ be the empirical measures and
-$\mathrm{Opt}_n$ their full set of optimal couplings for the length distance $d_F$.
+Let $`(M,F)`$ be a connected, complete, smooth, reversible, strongly convex
+Finsler manifold of dimension $`d\ge6`$, with smooth positive volume $`m`$.
+Let $`\mu=\rho_A m`$ and $`\nu=\rho_B m`$ be probability measures with Lipschitz
+densities and disjoint compact supports $`A,B`$.
+For independent iid samples, let $`\mu_n,\nu_n`$ be the empirical measures and
+$`\mathrm{Opt}_n`$ their full set of optimal couplings for the length distance $`d_F`$.
 
-There is a deterministic population-optimal coupling $\pi_*$, determined by
-$(F,\mu,\nu)$, such that for every such sampling and every metric $d_{\rm weak}$
-inducing weak convergence on probability measures on $A\times B$,
+There is a deterministic population-optimal coupling $`\pi_*`$, determined by
+$`(F,\mu,\nu)`$, such that for every such sampling and every metric $`d_{\rm weak}`$
+inducing weak convergence on probability measures on $`A\times B`$,
 
-$$
+```math
 \sup_{\gamma\in\mathrm{Opt}_n} d_{\rm weak}(\gamma,\pi_*)
 \xrightarrow[n\to\infty]{\mathbb P^*} 0,
-$$
+```
 
-where $\mathbb P^*$ denotes outer probability.
+where $`\mathbb P^*`$ denotes outer probability.
 
 ## Verify
 
